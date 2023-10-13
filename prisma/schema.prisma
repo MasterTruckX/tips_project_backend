@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model date {
+  id      Int       @id
+  date    DateTime  @db.Date
+  role    String?
+  hrs     DateTime? @db.Time(6)
+  shift   String?
+  user_id Int
+  user    user      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  waiter  waiter[]
+}
+
+model user {
+  id       Int      @id
+  username String
+  name     String
+  password String
+  admin    Boolean?
+  date     date[]
+}
+
+model waiter {
+  id       Int    @id
+  name     String
+  checkTip Float
+  paidTip  Float
+  date_id  Int
+  date     date   @relation(fields: [date_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
