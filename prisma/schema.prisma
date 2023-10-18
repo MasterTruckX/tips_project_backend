@@ -8,7 +8,7 @@ datasource db {
 }
 
 model date {
-  id      Int       @id
+  id      Int       @id @default(autoincrement())
   date    DateTime  @db.Date
   role    String?
   hrs     DateTime? @db.Time(6)
@@ -19,7 +19,7 @@ model date {
 }
 
 model user {
-  id       Int      @id
+  id       Int      @id @default(autoincrement())
   username String
   name     String
   password String
@@ -28,7 +28,7 @@ model user {
 }
 
 model waiter {
-  id       Int    @id
+  id       Int    @id @default(autoincrement())
   name     String
   checkTip Float
   paidTip  Float
