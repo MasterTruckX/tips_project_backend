@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 
 const registerUser = asyncHandler(
     //verify form is not empty
-    async(req, res, next) => {
+    async(req, res) => {
     const { name, username, password } = req.body
     if (!name || !username || !password) {
         res.status(400)
@@ -15,7 +15,7 @@ const registerUser = asyncHandler(
     }
     // verify user existance
     const userExists = await prisma.user.findFirst({
-        where: {OR: [{username},{name}]}
+        where: {username}
     })
     if(userExists) {
         res.status(400)
@@ -48,7 +48,59 @@ const registerUser = asyncHandler(
     }
     }
 )
+const generateToken = (id) => {
+    return jwt.sign({id}, process.env.JWT_SECRET, {
+      expiresIn: '1hr'   
+    })
+}
 
+const loginUser = asyncHandler(async(req,res)=>{
+    const { username, password } = req.body
+    //Verify username and pw
+    const user = await prisma.user.findFirst({where: {username}})
+    if ( user && (await bcrypt.compare(password, user.password))) {
+        res.json({
+            _id: user._id,
+            name: user.name,
+            username: user.username,
+            admin: user.admin,
+            token: generateToken(user.id)
+        })
+    } else {
+        res.status(400)
+        throw new Error('Wrong Password.')
+    }
+})
+const getUserData = asyncHandler(
+    async(req,res) => {
+        res.json(req.user)
+    }
+)
+const updateUserAdmin = asyncHandler(
+    async(req,res) => {
+        const userExists = await prisma.user.findUnique({
+            where: { id: +req.params.id}})
+        if ( userExists ) {
+            const user = await prisma.user.update({
+                where: { id: +req.params.id },
+                data: { admin: true }
+            })
+            if(user && !user.admin) {
+                res.status(200).json({ message: `${user.username} is now admin.`})
+            }else if(user.admin){
+                res.status(200).json({ message: `${user.username} was already admin.`})
+            }
+        }else {
+            res.status(404)
+            throw new Error('Username not found.')
+        }
+
+
+    }
+)
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser,
+    getUserData,
+    updateUserAdmin
 }
