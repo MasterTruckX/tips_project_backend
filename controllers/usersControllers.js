@@ -76,6 +76,32 @@ const getUserData = asyncHandler(
         res.json(req.user)
     }
 )
+const updateUser = asyncHandler(
+    async(req,res) => {
+        const { name, password } = req.body
+        if (!name || !password) {
+            res.status(400)
+            throw new Error('Please fill-in all the fields.')
+        }
+        //generate hash
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)        
+        const user = await prisma.user.update({
+            where: { id: +req.params.id },
+            data: {
+                name: req.body.name,
+                password: hashedPassword
+            }
+        })
+        if(user){
+            res.status(200).json({ message: `${user.username} has been updated.`})
+        }else{
+            res.status(404)
+            throw new Error('Username not found.')
+        }
+    }
+)
+
 const updateUserAdmin = asyncHandler(
     async(req,res) => {
         const userExists = await prisma.user.findUnique({
@@ -98,9 +124,25 @@ const updateUserAdmin = asyncHandler(
 
     }
 )
+const deleteUser = asyncHandler(
+    async(req,res) => {
+        const userExists = await prisma.user.findUnique({
+            where: { id: +req.params.id}})
+        if(userExists){
+            const user = await prisma.user.delete({where:{id:+req.params.id}})
+            res.status(200).json({ message: `${user.username} has been deleted.`})
+        }else{
+            res.status(404)
+            throw new Error('User not found.')
+        }
+
+    }
+)
 module.exports = {
     registerUser,
     loginUser,
     getUserData,
-    updateUserAdmin
+    updateUser,
+    updateUserAdmin,
+    deleteUser
 }
