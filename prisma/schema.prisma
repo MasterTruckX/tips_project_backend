@@ -8,13 +8,13 @@ datasource db {
 }
 
 model date {
-  id      Int       @id @default(autoincrement())
-  date    DateTime  @db.Date
+  id      Int      @id @default(autoincrement())
+  date    DateTime @db.Date
   role    String?
-  hrs     DateTime? @db.Time(6)
   shift   String?
   user_id Int
-  user    user      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  hours   Float?
+  user    user     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   waiter  waiter[]
 }
 

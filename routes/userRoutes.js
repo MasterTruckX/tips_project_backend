@@ -7,6 +7,6 @@ router.post('/', registerUser)
 router.post('/login', loginUser)
 router.get('/getMe',protect, getUserData)
 router.put('/update/:id',protect, updateUser)
-router.route('/:id').delete(protectAdmin,deleteUser).put('/:id',protectAdmin, updateUserAdmin)
+router.route('/:id').delete(protectAdmin,deleteUser).put(protectAdmin, updateUserAdmin)
 
 module.exports = router;
