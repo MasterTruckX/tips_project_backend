@@ -1,12 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const { createDate, getAllDates, getDate, updateDate, deleteDate } = require('../controllers/datesControllers')
-const { protect, protectAdmin } = require('../middleware/authMiddleware')
+const { protect } = require('../middleware/authMiddleware')
 
-router.post('/:id',createDate)
-router.get('/:id', getAllDates)
 router.get('/date/:id', getDate)
-router.put('/:id', updateDate)
-router.delete('/:id', deleteDate)
+router.route('/:id').post(protect,createDate).get(protect,getAllDates).put(protect,updateDate).delete(protect,deleteDate)
 
 module.exports = router;
