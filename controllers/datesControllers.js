@@ -20,7 +20,8 @@ const createDate = asyncHandler(
                 date: dates.date,
                 role: dates.role,
                 hours: dates.hours,
-                shift: dates.shift
+                shift: dates.shift,
+                id: dates.id
             })
         } else{
             res.status(400)

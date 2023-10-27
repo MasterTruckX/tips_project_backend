@@ -60,7 +60,7 @@ const loginUser = asyncHandler(async(req,res)=>{
     const user = await prisma.user.findFirst({where: {username}})
     if ( user && (await bcrypt.compare(password, user.password))) {
         res.json({
-            _id: user._id,
+            id: user.id,
             name: user.name,
             username: user.username,
             admin: user.admin,
