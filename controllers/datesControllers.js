@@ -11,7 +11,7 @@ const createDate = asyncHandler(
                 role: req.body.role,
                 hours: +req.body.hours,
                 shift: req.body.shift,
-                user_id: +req.params.id
+                user_id: req.user.id
             }
         })
         if (dates){
@@ -32,13 +32,13 @@ const createDate = asyncHandler(
 const getAllDates = asyncHandler(
     async(req,res)=>{
         const user = await prisma.user.findUnique({
-            where: {id: +req.params.id}
+            where: {id: req.user.id}
         })
         if(user){
             try{
                 const dates = await prisma.date.findMany({
                     where: {
-                        user_id: +req.params.id
+                        user_id: req.user.id
                     }
                 })
                 let listDates = []
@@ -58,7 +58,7 @@ const getAllDates = asyncHandler(
 const getDate = asyncHandler(
     async(req,res) =>{
         const dates = await prisma.date.findFirst({
-            where: {AND: [{user_id: +req.params.id},{date: (new Date(req.body.date)).toJSON()}] }
+            where: {AND: [{user_id: req.user.id},{date: (new Date(req.body.date)).toJSON()}] }
         })
         if(dates){
             res.status(200).json({message: dates})
@@ -74,7 +74,7 @@ const updateDate = asyncHandler(
         try{
             const dateExists = await prisma.date.findFirst({
                 where: {
-                    AND: [{user_id: +req.params.id},{date: (new Date(req.body.date)).toJSON()}] 
+                    AND: [{user_id: req.user.id},{date: (new Date(req.body.date)).toJSON()}] 
                 }
             })
             const updatedDate = await prisma.date.update({
@@ -99,7 +99,7 @@ const deleteDate = asyncHandler(
         try{
             const dateExists = await prisma.date.findFirst({
                 where: {
-                    AND: [{user_id: +req.params.id},{date: (new Date(req.body.date)).toJSON()}] 
+                    AND: [{user_id: req.user.id},{date: (new Date(req.body.date)).toJSON()}] 
                 }
             })
             const date = await prisma.date.delete({
