@@ -11,7 +11,7 @@ const createWaiter = asyncHandler(
                     name: req.body.name,
                     checkTip: +req.body.checkTip,
                     paidTip: +req.body.paidTip,
-                    date_id: +req.params.id
+                    date_id: +req.body.id
                 }
             })
             res.status(201).json({
@@ -31,7 +31,7 @@ const getAllWaiters = asyncHandler(
     async(req,res) => {
         const dateExists = await prisma.date.findUnique({
             where: {
-                id:+req.params.id
+                id:+req.body.id
             }
         })
         if(dateExists){
@@ -58,7 +58,7 @@ const getAllWaiters = asyncHandler(
 const getWaiter = asyncHandler(
     async(req,res) => {
         const dateExists = await prisma.date.findUnique({
-            where: {id: +req.params.id}
+            where: {id: +req.body.id}
         })
         if(dateExists){
             const waiter = await prisma.waiter.findFirst({
@@ -79,7 +79,7 @@ const getWaiter = asyncHandler(
 const updateWaiter = asyncHandler(
     async(req,res) => {
         const waiterExists = await prisma.waiter.findFirst({
-            where: {AND: [{date_id: +req.params.id},{name: req.body.name}]}
+            where: {AND: [{date_id: +req.body.id},{name: req.body.name}]}
         })
         if(waiterExists){
             const waiter = await prisma.waiter.update({
@@ -102,7 +102,7 @@ const updateWaiter = asyncHandler(
 const deleteWaiter = asyncHandler(
     async(req,res) => {
         const waiterExists = await prisma.waiter.findFirst({
-            where: {AND: [{date_id: +req.params.id},{name: req.body.name}]}
+            where: {AND: [{date_id: +req.body.id},{name: req.body.name}]}
         })
         if(waiterExists){
             const waiter = await prisma.waiter.delete({
