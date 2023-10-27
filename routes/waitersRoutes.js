@@ -1,11 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const { createWaiter, getAllWaiters, getWaiter, updateWaiter, deleteWaiter } = require('../controllers/waitersControllers')
+const { protect } = require('../middleware/authMiddleware')
 
-router.post('/:id',createWaiter)
-router.get('/:id', getAllWaiters)
 router.get('/waiter/:id', getWaiter)
-router.put('/:id', updateWaiter)
-router.delete('/:id', deleteWaiter)
+router.route('/:id').post(protect, createWaiter).get(protect,getAllWaiters).put(protect,updateWaiter).delete(protect,deleteWaiter)
 
 module.exports = router

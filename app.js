@@ -4,6 +4,7 @@ const dotenv = require('dotenv').config();
 const {errorHandler} = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors')
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/userRoutes');
@@ -11,6 +12,8 @@ const datesRouter = require('./routes/datesRoutes');
 const waitersRouter = require('./routes/waitersRoutes');
 
 const app = express();
+
+app.use(cors())
 
 app.use(logger('dev'));
 app.use(express.json());
