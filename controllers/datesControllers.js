@@ -58,8 +58,8 @@ const getAllDates = asyncHandler(
 
 const getDate = asyncHandler(
     async(req,res) =>{
-        const dates = await prisma.date.findFirst({
-            where: {AND: [{user_id: req.user.id},{date: (new Date(req.body.date)).toJSON()}] }
+        const dates = await prisma.date.findUnique({
+            where: {id: +req.params.id} 
         })
         if(dates){
             res.status(200).json({message: dates})
