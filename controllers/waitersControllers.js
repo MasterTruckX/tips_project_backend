@@ -31,18 +31,16 @@ const getAllWaiters = asyncHandler(
     async(req,res) => {
         const dateExists = await prisma.date.findUnique({
             where: {
-                id:+req.body.id
+                id:+req.params.id
             }
         })
         if(dateExists){
             const waiters = await prisma.waiter.findMany({
                 where: {
-                    date_id: dateExists.id
+                    date_id: +req.params.id
                 }
             })
-            let listWaiters = []
-            waiters.forEach(t => {listWaiters.push(t)})
-            if(listWaiters.length==0){
+            if(waiters.length==0){
                 res.status(400)
                 throw new Error('This date does not have any tips registered.')    
             }else{

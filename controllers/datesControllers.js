@@ -42,9 +42,9 @@ const getAllDates = asyncHandler(
                         user_id: req.user.id
                     }
                 })
-                let listDates = []
-                dates.forEach(d => {listDates.push(d.date)})
-                res.status(200).json({message: listDates})
+                // let listDates = []
+                // dates.forEach(d => {listDates.push(d.date)})
+                res.status(200).json(dates)
             }catch{
                 res.status(404)
                 throw new Error('This user does not have any registered dates.')
@@ -62,7 +62,7 @@ const getDate = asyncHandler(
             where: {id: +req.params.id} 
         })
         if(dates){
-            res.status(200).json({message: dates})
+            res.status(200).json(dates)
         }else{
             res.status(404)
             throw new Error('This user does not have this date registered.')
