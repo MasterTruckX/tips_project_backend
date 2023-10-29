@@ -42,8 +42,6 @@ const getAllDates = asyncHandler(
                         user_id: req.user.id
                     }
                 })
-                // let listDates = []
-                // dates.forEach(d => {listDates.push(d.date)})
                 res.status(200).json(dates)
             }catch{
                 res.status(404)
@@ -73,14 +71,9 @@ const getDate = asyncHandler(
 const updateDate = asyncHandler(
     async(req,res) =>{
         try{
-            const dateExists = await prisma.date.findFirst({
-                where: {
-                    AND: [{user_id: req.user.id},{date: (new Date(req.body.date)).toJSON()}] 
-                }
-            })
             const updatedDate = await prisma.date.update({
                 where: {
-                    id: dateExists.id
+                    id: +req.params.id
                 },
                 data: {
                     role: req.body.role,

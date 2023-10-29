@@ -4,6 +4,7 @@ const { createDate, getAllDates, getDate, updateDate, deleteDate } = require('..
 const { protect } = require('../middleware/authMiddleware')
 
 router.get('/date/:id',protect, getDate)
-router.route('/').post(protect,createDate).get(protect,getAllDates).put(protect,updateDate).delete(protect,deleteDate)
+router.route('/').post(protect,createDate).get(protect,getAllDates).delete(protect,deleteDate)
+router.put('/:id', protect, updateDate)
 
 module.exports = router;
