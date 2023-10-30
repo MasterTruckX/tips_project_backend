@@ -91,14 +91,9 @@ const updateDate = asyncHandler(
 const deleteDate = asyncHandler(
     async(req,res)=> {
         try{
-            const dateExists = await prisma.date.findFirst({
-                where: {
-                    AND: [{user_id: req.user.id},{date: (new Date(req.body.date)).toJSON()}] 
-                }
-            })
             const date = await prisma.date.delete({
                 where: {
-                    id: dateExists.id
+                    id: +req.params.id
                 }
             })
             res.status(200).json({message: `Date ${date.date} has been deleted.`})
